@@ -5,9 +5,13 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 
 # 1. ページの設定（ワイドモードにする）
-st.set_page_config(page_title="爆速EDAツール", layout="wide")
+st.set_page_config(page_title="EDAツール", layout="wide")
 
-st.title("📊 爆速EDAツール for Kaggle")
+st.title("📊 EDAツール")
+
+@st.cache_data
+def load_data(file):
+    return pd.read_csv(file)
 
 # 2. サイドバー：設定エリア
 st.sidebar.header("📁 データ入力")
@@ -15,7 +19,7 @@ uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード",
 
 # データがある場合のみ処理を実行
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
+    df = load_data(uploaded_file)
     
     # サイドバーに基本情報を表示
     st.sidebar.write("---")
