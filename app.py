@@ -5,9 +5,13 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 
 # 1. ページの設定（ワイドモードにする）
-st.set_page_config(page_title="爆速EDAツール", layout="wide")
+st.set_page_config(page_title="EDAツール", layout="wide")
 
-st.title("📊 爆速EDAツール for Kaggle")
+st.title("📊 EDAツール")
+
+@st.cache_data
+def load_data(file):
+    return pd.read_csv(file)
 
 # 2. サイドバー：設定エリア
 st.sidebar.header("📁 データ入力")
@@ -15,7 +19,7 @@ uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード",
 
 # データがある場合のみ処理を実行
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
+    df = load_data(uploaded_file)
     
     # サイドバーに基本情報を表示
     st.sidebar.write("---")
@@ -58,7 +62,7 @@ if uploaded_file is not None:
                 if selected_col:
                     # Plotlyでヒストグラムを描画
                     fig = px.histogram(df, x=selected_col, nbins=30, title=f"{selected_col} の分布")
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
             
             elif sub_chart_type == "散布図 (2変数)":
                 c1, c2, c3 = st.columns(3)
@@ -70,7 +74,7 @@ if uploaded_file is not None:
                 if x_col and y_col:
                     # Plotlyで散布図を描画
                     fig = px.scatter(df, x=x_col, y=y_col, color=color_col, title=f"{x_col} vs {y_col}")
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
 
         elif chart_type == "カテゴリデータの分布 (棒グラフ)":
             cat_cols = df.select_dtypes(include=['object', 'category']).columns
@@ -92,7 +96,7 @@ if uploaded_file is not None:
                     fig = px.bar(count_df, x='count', y=selected_cat_col, orientation='h', title=f"{selected_cat_col} の内訳")
                     # 上から順に並ぶようにY軸を反転
                     fig.update_layout(yaxis={'categoryorder':'total ascending'})
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
 
     # --- タブ3: 相関ヒートマップ ---
     with tab3:
