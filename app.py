@@ -1,5 +1,5 @@
 import streamlit as st
-import japanize_matplotlib
+import matplotlib_fontja
 # 自作モジュールの読み込み
 from utils.loader import load_data
 from views.charts import show_summary, show_interactive_charts, show_correlation
