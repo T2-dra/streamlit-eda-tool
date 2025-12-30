@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import joblib
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.impute import SimpleImputer
@@ -80,6 +81,27 @@ def show_ai_analysis(df):
                 st.plotly_chart(fig, width="stretch")
                 
                 st.info("💡 棒グラフが長いほど、予測に強く寄与している重要なデータです。")
+
+                st.markdown("💾学習済みモデルの保存")
+                st.info("このモデルを保存しておけば、次の「未来予測」タブで使えます。")
+
+                model_data = {
+                    "model": model,
+                    "features": X.columns.tolist(),
+                    "target": target_col,
+                    "algo_name": algo_name
+                }
+
+                import io
+                buffer = io.BytesIO()
+                joblib.dump(model_data, buffer)
+
+                st.download_button(
+                    label="モデルをダウンロード",
+                    data=buffer.getvalue(),
+                    file_name="my_model.pkl",
+                    mime="application/octet-stream"
+                    )
 
             except Exception as e:
                 st.error(f"分析中にエラーが発生しました: {e}")
