@@ -6,7 +6,7 @@ from views.charts import show_summary, show_interactive_charts, show_correlation
 
 # 1. ページの設定
 st.set_page_config(page_title="EDAツール", layout="wide")
-st.title("📊 EDAツール (Refactored)")
+st.title("📊 EDAツール")
 
 # 2. サイドバー：データ入力
 st.sidebar.header("📁 データ入力")
@@ -14,7 +14,7 @@ uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード",
 
 if uploaded_file is not None:
     # データ読み込み (Utils)
-    df = load_data(uploaded_file)
+    df = load_data(uploaded_file, uploaded_file.name)
     
     st.sidebar.write("---")
     st.sidebar.write(f"行数: {df.shape[0]}")
@@ -24,7 +24,7 @@ if uploaded_file is not None:
     tab1, tab2, tab3 = st.tabs(["📋 データ概要", "📈 詳細グラフ", "🔥 相関ヒートマップ"])
 
     with tab1:
-        show_summary(df)  # View関数を呼ぶだけ！
+        show_summary(df)
 
     with tab2:
         show_interactive_charts(df)
